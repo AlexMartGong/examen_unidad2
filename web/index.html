@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Formulario con Bootstrap y Validación JS</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.9/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h2>Registro de Usuario</h2>
+            <form id="registroForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" class="form-control" id="fechaNacimiento" required>
+                </div>
+                <div class="form-group">
+                    <label for="domicilio">Domicilio:</label>
+                    <input type="text" class="form-control" id="domicilio" required>
+                </div>
+                <div class="form-group">
+                    <label for="cp">Código Postal:</label>
+                    <input type="text" class="form-control" id="cp" required>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" class="form-control" id="correo" required onblur="validarEmail(this)">
+                    <small id="resultado" class="form-text text-muted"></small>
+                </div>
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" class="form-control" id="usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" class="form-control" id="contrasena" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+
+        <script>
+
+            function validarEmail(correo) {
+
+                var texto = document.getElementById(correo.id).value;
+                var regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
+                if (!regex.test(texto)) {
+                    document.getElementById("resultado").innerHTML = "Correo invalido";
+                } else {
+                    document.getElementById("resultado").innerHTML = "";
+                }
+
+            }
+
+            document.getElementById('registroForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                var nombre = document.getElementById('nombre').value;
+                var fechaNacimiento = document.getElementById('fechaNacimiento').value;
+                var domicilio = document.getElementById('domicilio').value;
+                var cp = document.getElementById('cp').value;
+                var correo = document.getElementById('correo').value;
+                var usuario = document.getElementById('usuario').value;
+                var contrasena = document.getElementById('contrasena').value;
+
+                if (!nombre || !fechaNacimiento || !domicilio || !cp || !correo || !usuario || !contrasena) {
+                    alert('Por favor, completa todos los campos.');
+                    return false;
+                }
+
+                if (!/\S+@\S+\.\S+/.test(correo)) {
+                    alert('Por favor, introduce una dirección de correo electrónico válida.');
+                    return false;
+                }
+
+                // Si todo está correcto, procedemos a enviar los datos
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "tu_endpoint_de_servidor", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        console.log('Datos enviados con éxito');
+                        // Aquí puedes manejar la respuesta del servidor
+                    }
+                }
+                // Preparamos los datos del formulario para enviar
+                var data = `nombre=${encodeURIComponent(nombre)}&fechaNacimiento=${encodeURIComponent(fechaNacimiento)}&domicilio=${encodeURIComponent(domicilio)}&cp=${encodeURIComponent(cp)}&correo=${encodeURIComponent(correo)}&usuario=${encodeURIComponent(usuario)}&contrasena=${encodeURIComponent(contrasena)}`;
+
+                // Enviamos los datos
+                xhr.send(data);
+
+
+
+                console.log('Formulario enviado con éxito');
+            });
+        </script>
+    </body>
+</html>
